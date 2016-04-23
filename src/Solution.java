@@ -1,34 +1,49 @@
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * Created by FI on 23-Apr-16.
+ */
 public class Solution {
     public static void main(String[] args) {
         Scanner scanIn = new Scanner(System.in);
-        Solution myFunnyString = new Solution(scanIn);
+        Solution myAnagram = new Solution();
+        myAnagram.readIn(scanIn);
     }
 
-    public Solution(Scanner scanIn) {
-        int strCount = scanIn.nextInt();
+    void readIn(Scanner scanIn) {
+        int cases = scanIn.nextInt();
         scanIn.nextLine();
-        for(int i = 0; i < strCount; i++){
-            String myStr = scanIn.nextLine().trim();
-            checkFunny(myStr);
+        for (int i = 0; i < cases; i++) {
+            System.out.println(getAnagram(scanIn.nextLine().trim()));
         }
     }
 
-    void checkFunny(String myStr){
-        boolean isFunny = true;
-        for(int i=0;i<(myStr.length()/2);i++){
-            int diff1 = myStr.charAt(i)-myStr.charAt(i+1);
-            int diff2 = myStr.charAt(myStr.length()-2-i)-myStr.charAt(myStr.length()-1-i);
-            if(diff1 != diff2){
-                isFunny = false;
-                break;
+    int getAnagram(String doubleString) {
+        if ((doubleString.length() % 2) != 0) {
+            return -1;
+        } else {
+            HashMap<Character, Integer> charMap = new HashMap<>();
+            int count = 0;
+            for (int i = 0; i < doubleString.length(); i++) {
+                char myChar = doubleString.charAt(i);
+                if (i < doubleString.length() / 2) {
+                    charMap.put(myChar, charMap.getOrDefault(myChar, 0) + 1);
+                } else {
+                    if (charMap.containsKey(myChar)) {
+                        int charCount = charMap.get(myChar) - 1;
+                        if(charCount == 0){
+                            charMap.remove(myChar);
+                        }else{
+                            charMap.put(myChar, charCount);
+                        }
+                    } else {
+                        count++;
+                    }
+                }
             }
-        }
-        if(isFunny){
-            System.out.println("Funny");
-        }else{
-            System.out.println("Not Funny");
+            return count;
         }
     }
 }
