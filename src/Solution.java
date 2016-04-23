@@ -1,41 +1,69 @@
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
-/**
- * Created by FI on 23-Apr-16.
- */
 public class Solution {
     public static void main(String[] args) {
         Scanner scanIn = new Scanner(System.in);
         Solution myObject = new Solution();
-        System.out.println(myObject.hasPalindrome(scanIn.nextLine().trim()));
+        myObject.readIn(scanIn);
+        myObject.calculate();
+    }
+    int steadyCount;
+    String inputString;
+    HashMap<Character, Integer> hashMap =new HashMap<>();
+    LinkedList<Character> range = new LinkedList<>();
+    void readIn(Scanner scanIn){
+        steadyCount = scanIn.nextInt()/4;
+        scanIn.nextLine();
+        inputString = scanIn.nextLine().trim();
     }
 
-    String hasPalindrome(String myString){
-        HashMap<Character,Integer> stringMap = new HashMap<>();
-        for(char myChar: myString.toCharArray()){
-            stringMap.put(myChar,stringMap.getOrDefault(myChar,0)+1);
+    void calculate(){
+        int maxCount = 0;
+        int dp[]=new int[inputString.length()];
+        for(char myChar: "ACTG".toCharArray()){
+            hashMap.put(myChar,0);
         }
-        int oddCount=0;
-        for(int charCount: stringMap.values()){
-            if(charCount%2 !=0){
-                oddCount ++;
+        for(int i = 0; i<inputString.length();i++){
+            dp[i]=getLength(i);
+        }
+        for(int i = 0; i<inputString.length();i++){
+            int dp_last=dp[i];
+            dp[i]=getLength(i);
+            if(dp_last == dp[i]){
+                break;
             }
         }
-        if(oddCount>getAllowedOdd(myString)){
-            return "NO";
-        }else{
-            return "YES";
-        }
-
+        System.out.println(getSubstringLength(dp));
     }
 
-    private int getAllowedOdd(String myString){
-        if(myString.length()%2 == 0){
-            return 0;
+    int getLength(int index){
+        Character newChar = inputString.charAt(index);
+        int inListCount = hashMap.get(newChar);
+        if(inListCount>=steadyCount){
+            char popChar;
+            do {
+                popChar = range.removeFirst();
+                hashMap.put(popChar, hashMap.get(popChar) - 1);
+            } while (popChar != newChar);
         }
-        else{
-            return 1;
-        }
+        range.addLast(newChar);
+        hashMap.put(newChar,hashMap.get(newChar)+1);
+        return range.size();
     }
+
+    int getSubstringLength(int dp[]){
+        int minSubstring = dp.length;
+        int index = 0;
+        while (index < dp.length && dp[index] >= index) {
+            minSubstring = Math.min(dp.length - dp[index], minSubstring);
+            index++;
+        }
+
+        return minSubstring;
+    }
+
+
 }
