@@ -2,6 +2,10 @@ package Section3;
 
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import static org.junit.Assert.*;
 
 /**
@@ -9,8 +13,19 @@ import static org.junit.Assert.*;
  */
 public class TwoStringsTest {
     @Test
-    public void main() throws Exception {
-
+    public void testCase1(){
+        String inputString="2\n" +
+                "hello\n" +
+                "world\n" +
+                "hi\n" +
+                "world";
+        String outputString="YES\n" +
+                "NO";
+        System.setIn(new ByteArrayInputStream(inputString.getBytes()));
+        ByteArrayOutputStream actualOutput = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(actualOutput));
+        TwoStrings.main(new String[0]);
+        assertEquals("Results differ",outputString.trim(),actualOutput.toString().replace("\r","").trim());
     }
 
 }
