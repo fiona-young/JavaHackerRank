@@ -1,47 +1,59 @@
 
-
 import java.util.Scanner;
 
 public class Solution {
     public static void main(String[] args) {
         Solution myObject = new Solution();
         Scanner scanIn = new Scanner(System.in);
-        myObject.readIn(scanIn);
+        myObject.readIn(scanIn.nextLine().trim(),scanIn.nextLine().trim());
         System.out.println(myObject.calculate());
     }
 
-    private final int LEN = 6;
-    private int grid[][] = new int[LEN][LEN];
+    private String mum;
+    private String dad;
+    private boolean matches[][];
+    private boolean mumUsed[];
+    private int dp[][];
+    private char dp2[][];
 
-    private void readIn(Scanner scanIn){
-
-        for(int iRow=0; iRow<LEN; iRow++){
-            for(int iCol=0; iCol<LEN; iCol++){
-                grid[iRow][iCol]=scanIn.nextInt();
-            }
-            if(iRow<LEN-1) {
-                scanIn.nextLine();
-            }
-        }
+    private void readIn(String mum, String dad) {
+        this.mum = mum;
+        this.dad = dad;
+        matches = new boolean[mum.length()][dad.length()];
+        dp = new int[mum.length()][dad.length()];
+        dp2 = new char[mum.length()][dad.length()];
+        mumUsed = new boolean[dad.length()];
     }
 
     private int calculate(){
-        int myMax = -10000;
-        for(int iRow=1; iRow<LEN-1; iRow++) {
-            for (int iCol = 1; iCol < LEN-1; iCol++) {
-                myMax = Math.max(myMax,getHourglassSum(iRow,iCol));
+        for(int iMum=0;iMum < mum.length(); iMum++ ){
+            for(int iDad=0;iDad < dad.length(); iDad++ ){
+                if(mum.charAt(iMum) == dad.charAt(iDad)){
+                    addMatch(iMum,iDad);
+                }
+                addDp(iMum,iDad);
             }
         }
-        return myMax;
+        return dp[mum.length()-1][dad.length()-1];
     }
 
-    private int getHourglassSum(int iRow, int iCol){
-        int count = 0;
-        for(int i=0;i<3;i++){
-            count+=grid[iRow-1][iCol-i+1]+grid[iRow+1][iCol-i+1];
+    private void addMatch(int iMum, int iDad){
+        matches[iMum][iDad]=true;
+        if(!mumUsed[iDad]){
+            dp[iMum][iDad]=1;
         }
-        count += grid[iRow][iCol];
-        return count;
+        mumUsed[iDad]=true;
     }
 
+    private void addDp(int iMum, int iDad){
+        int val = 0;
+        if(iMum>0){
+            val = Math.max( dp[iMum-1][iDad],val);
+        }
+        if(iDad > 0){
+            val = Math.max( dp[iMum][iDad-1],val);
+        }
+        val+=dp[iMum][iDad];
+        dp[iMum][iDad]=val;
+    }
 }
