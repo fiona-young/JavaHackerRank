@@ -1,43 +1,47 @@
 
-import java.util.*;
 
-/**
- * Created by FI on 23-Apr-16.
- */
+import java.util.Scanner;
+
 public class Solution {
     public static void main(String[] args) {
-        Scanner scanIn = new Scanner(System.in);
         Solution myObject = new Solution();
+        Scanner scanIn = new Scanner(System.in);
         myObject.readIn(scanIn);
+        System.out.println(myObject.calculate());
     }
 
+    private final int LEN = 6;
+    private int grid[][] = new int[LEN][LEN];
 
-    public void readIn(Scanner scanIn){
-        int cases = scanIn.nextInt();
-        scanIn.nextLine();
-        for(int i = 0; i<cases;i++){
-            System.out.println(anagramPairCount(scanIn.nextLine().trim()));
-        }
-    }
+    private void readIn(Scanner scanIn){
 
-    int anagramPairCount(String inString){
-        //  System.out.println(inString);
-        int maxCount = inString.length()/2;
-        int count = 0;
-        for(int length = 1;length<= inString.length(); length++){
-            for(int i=0;i<=inString.length()-length;i++){
-                char[] substr1= inString.substring(i,i+length).toCharArray();
-                Arrays.sort(substr1);
-                for(int j=i+1;j<=inString.length()-length;j++){
-                    char[] substr2 = inString.substring(j,j+length).toCharArray();
-                    Arrays.sort(substr2);
-                    if(Arrays.equals(substr1,substr2)){
-                        // System.out.println(String.format("%s|%s,%s| %s|%s,%s|", new String(substr1), i, i + length - 1, new String(substr2), j, j + length - 1));
-                        count++;
-                    }
-                }
+        for(int iRow=0; iRow<LEN; iRow++){
+            for(int iCol=0; iCol<LEN; iCol++){
+                grid[iRow][iCol]=scanIn.nextInt();
+            }
+            if(iRow<LEN-1) {
+                scanIn.nextLine();
             }
         }
+    }
+
+    private int calculate(){
+        int myMax = -10000;
+        for(int iRow=1; iRow<LEN-1; iRow++) {
+            for (int iCol = 1; iCol < LEN-1; iCol++) {
+                myMax = Math.max(myMax,getHourglassSum(iRow,iCol));
+            }
+        }
+        return myMax;
+    }
+
+    private int getHourglassSum(int iRow, int iCol){
+        int count = 0;
+        for(int i=0;i<3;i++){
+            count+=grid[iRow-1][iCol-i+1]+grid[iRow+1][iCol-i+1];
+        }
+        count += grid[iRow][iCol];
         return count;
     }
+
 }
