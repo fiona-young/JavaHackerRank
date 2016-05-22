@@ -21,7 +21,6 @@ public class CommonChild {
         this.dad = dad;
         dpUsedAbove = new int[mum.length()][dad.length()];
         dp = new int[mum.length()][dad.length()];
- //       dpChar = new char[mum.length()][dad.length()];
     }
 
     private int calculate(){
@@ -31,23 +30,6 @@ public class CommonChild {
             }
 
         }
-
-/*        for(int iMum=0;iMum < mum.length(); iMum++ ) {
-            for (int iDad = 0; iDad < dad.length(); iDad++) {
-                System.out.print(dp[iMum][iDad]+" ");
-            }
-            System.out.println();
-        }*/
-
-
-/*        for(int iMum=0;iMum < mum.length(); iMum++ ) {
-            for (int iDad = 0; iDad < dad.length(); iDad++) {
-                System.out.print(dpChar[iMum][iDad]+" ");
-            }
-            System.out.println();
-        }*/
-
-
         return dp[mum.length()-1][dad.length()-1];
     }
 
@@ -76,13 +58,6 @@ public class CommonChild {
         }
         if(current+above > left){
             dpUsedAbove[iMum][iDad] = 1;
-/*            if(current == 1){
-                dpChar[iMum][iDad]=mum.charAt(iMum);
-            }else if(iMum>0){
-                dpChar[iMum][iDad]= dpChar[iMum-1][iDad];
-            }*/
-/*        }else if(iDad > 0){
-            dpChar[iMum][iDad]= dpChar[iMum][iDad-1];*/
         }
         dp[iMum][iDad]=Math.max(current+above,left);
     }
